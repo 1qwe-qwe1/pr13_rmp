@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">pr13_rmp</string>
+    <string name="start">Старт</string>
+    <string name="drive">Ехать</string>
 </resources>
