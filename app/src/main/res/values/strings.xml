@@ -2,4 +2,7 @@
     <string name="app_name">pr13_rmp</string>
     <string name="start">Старт</string>
     <string name="drive">Ехать</string>
+    <string name="pause">Пауза</string>
+    <string name="restart">Рестарт</string>
+    <string name="winner">Победитель!</string>
 </resources>

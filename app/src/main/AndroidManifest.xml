@@ -13,7 +13,8 @@
         android:theme="@style/Theme.Pr13_rmp">
         <activity
             android:name=".GameActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true">
