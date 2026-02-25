@@ -18,11 +18,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnStart = findViewById(R.id.btnStartGame);
-        btnStart.setOnClickListener(new View.OnClickListener() {
+        Button btnTwoPlayers = findViewById(R.id.btnTwoPlayers);
+        Button btnOnePlayer = findViewById(R.id.btnOnePlayer);
+
+        btnTwoPlayers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                intent.putExtra("GAME_MODE", "two_players");
+                startActivity(intent);
+            }
+        });
+
+        btnOnePlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                intent.putExtra("GAME_MODE", "one_player");
                 startActivity(intent);
             }
         });
