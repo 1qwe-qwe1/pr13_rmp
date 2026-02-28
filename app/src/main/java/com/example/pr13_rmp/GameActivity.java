@@ -2,6 +2,7 @@ package com.example.pr13_rmp;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,13 +19,12 @@ public class GameActivity extends AppCompatActivity {
 
     private ImageView auto1, auto2;
     private Button btnDrive1, btnDrive2, btnStart;
-    private TextView tvWinner;
-    private TextView tvGameMode;
+
 
     private float auto1StartX;
     private float auto2StartX;
     private final float FINISH_X = 1750f;
-    private Handler autoDriveHandler = new Handler();
+    private final Handler autoDriveHandler = Handler.createAsync(Looper.getMainLooper());
     private Runnable autoDriveRunnable;
     private boolean isAutoDriving = false;
 
@@ -39,7 +39,12 @@ public class GameActivity extends AppCompatActivity {
         auto1StartX = auto1.getX();
         auto2StartX = auto2.getX();
 
-        setupGameMode();
+        if (gameMode.equals("one_player")) {
+            btnDrive2.setVisibility(View.GONE);
+        } else {
+            btnDrive2.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void initViews() {
@@ -48,7 +53,6 @@ public class GameActivity extends AppCompatActivity {
         btnDrive1 = findViewById(R.id.btnDrive2);
         btnDrive2 = findViewById(R.id.btnDrive1);
         btnStart = findViewById(R.id.btnStart);
-        tvGameMode = findViewById(R.id.tvGameMode);
 
         btnDrive1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,10 +66,6 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (gameMode.equals("two_players")) {
                     moveCar2();
-                } else {
-                    Toast.makeText(GameActivity.this,
-                            "В режиме на одного вы управляете только красной машиной!",
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -78,23 +78,12 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
-    private void setupGameMode() {
-        if (gameMode.equals("two_players")) {
-            tvGameMode.setText("Режим: Игра на двоих");
-            btnDrive2.setVisibility(View.VISIBLE);
-        } else {
-            tvGameMode.setText("Режим: Игра на одного");
-            btnDrive2.setVisibility(View.GONE);
-
-            auto2.setAlpha(0.7f);
-        }
-    }
 
     public void startGame() {
         if (!isGameFinished) {
             if (!isGameStarted) {
                 isGameStarted = true;
-                btnStart.setText("Пауза");
+                btnStart.setText(getString(R.string.pause));
 
                 btnDrive1.setEnabled(true);
                 if (gameMode.equals("two_players")) {
@@ -105,16 +94,16 @@ public class GameActivity extends AppCompatActivity {
                     startAutoDriving();
                 }
 
-                Toast.makeText(this, "Гонка началась!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, (getString(R.string.race_begun)), Toast.LENGTH_SHORT).show();
             } else {
                 isGameStarted = false;
-                btnStart.setText("Старт");
+                btnStart.setText(getString(R.string.start));
 
                 if (gameMode.equals("one_player")) {
                     stopAutoDriving();
                 }
 
-                Toast.makeText(this, "Пауза", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, (getString(R.string.pause)), Toast.LENGTH_SHORT).show();
             }
         } else {
             resetGame();
@@ -123,7 +112,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void moveCar1() {
         if (!isGameStarted || isGameFinished) {
-            Toast.makeText(this, "Начните игру!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, (getString(R.string.start_game)), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -138,7 +127,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void moveCar2() {
         if (!isGameStarted || isGameFinished) {
-            Toast.makeText(this, "Начните игру!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, (getString(R.string.start_game)), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -191,18 +180,18 @@ public class GameActivity extends AppCompatActivity {
 
         btnDrive1.setEnabled(false);
         btnDrive2.setEnabled(false);
-        btnStart.setText("Рестарт");
+        btnStart.setText(getString(R.string.restart));
 
         String winnerMessage;
         if (gameMode.equals("two_players")) {
             winnerMessage = (winner == 1) ?
-                    "Победила первая машина!" :
-                    "Победила вторая машина!";
+                    getString(R.string.first_car_win) :
+                    getString(R.string.second_car_win);
         } else {
             if (winner == 1) {
-                winnerMessage = "Вы выиграли!";
+                winnerMessage = getString(R.string.you_won);
             } else {
-                winnerMessage = "Вы проиграли...";
+                winnerMessage = getString(R.string.you_lost);
             }
         }
 
@@ -216,15 +205,11 @@ public class GameActivity extends AppCompatActivity {
         isGameFinished = false;
         isGameStarted = false;
 
-        if (gameMode.equals("one_player")) {
-            stopAutoDriving();
-        }
-
-        btnStart.setText("Старт");
+        btnStart.setText(getString(R.string.start));
         btnDrive1.setEnabled(false);
         btnDrive2.setEnabled(false);
 
-        Toast.makeText(this, "Новая игра!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.new_game), Toast.LENGTH_SHORT).show();
     }
 
     @Override
